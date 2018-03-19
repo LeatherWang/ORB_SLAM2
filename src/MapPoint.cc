@@ -245,6 +245,7 @@ void MapPoint::Replace(MapPoint* pMP)
         // Replace measurement in keyframe
         KeyFrame* pKF = mit->first;
 
+        //如果该关键帧里原来没有该MapPoint，则添加
         if(!pMP->IsInKeyFrame(pKF))
         {
             pKF->ReplaceMapPointMatch(mit->second, pMP);// 让KeyFrame用pMP替换掉原来的MapPoint
@@ -252,6 +253,7 @@ void MapPoint::Replace(MapPoint* pMP)
         }
         else
         {
+            /** @todo 感觉是bug，不会出现这种情况*/
             // 产生冲突，即pKF中有两个特征点a,b（这两个特征点的描述子是近似相同的），这两个特征点对应两个MapPoint为this,pMP
             // 然而在fuse的过程中pMP的观测更多，需要替换this，因此保留b与pMP的联系，去掉a与this的联系
             pKF->EraseMapPointMatch(mit->second);
@@ -468,8 +470,8 @@ void MapPoint::UpdateNormalAndDepth()
     {
         unique_lock<mutex> lock3(mMutexPos);
         // 另见PredictScale函数前的注释
-        mfMaxDistance = dist*levelScaleFactor;                           // 观测到该点的距离下限
-        mfMinDistance = mfMaxDistance/pRefKF->mvScaleFactors[nLevels-1]; // 观测到该点的距离上限
+        mfMaxDistance = dist*levelScaleFactor;                           // 观测到该点的距离下限(最长)
+        mfMinDistance = mfMaxDistance/pRefKF->mvScaleFactors[nLevels-1]; // 观测到该点的距离上限(最短)
         mNormalVector = normal/n;                                        // 获得平均的观测方向
     }
 }

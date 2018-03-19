@@ -526,7 +526,7 @@ void LocalMapping::CreateNewMapPoints()
 
             // Triangulation is succesfull
     /*【步骤6.8】： 三角化生成3D点成功，构造成MapPoint*/
-            MapPoint* pMP = new MapPoint(x3D,mpCurrentKeyFrame,mpMap);
+            MapPoint* pMP = new MapPoint(x3D,mpCurrentKeyFrame,mpMap); /** @attention mpCurrentKeyFrame作为该MapPoint的参考关键帧*/
 
     /*【步骤6.9】： 为该MapPoint添加属性：*/
             // a.观测到该MapPoint的关键帧

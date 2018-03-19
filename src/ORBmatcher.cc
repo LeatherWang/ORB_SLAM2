@@ -446,7 +446,7 @@ int ORBmatcher::SearchByProjection(KeyFrame* pKF, cv::Mat Scw, const vector<MapP
         for(vector<size_t>::const_iterator vit=vIndices.begin(), vend=vIndices.end(); vit!=vend; vit++)
         {
             const size_t idx = *vit;
-            if(vpMatched[idx])
+            if(vpMatched[idx]) /** @attention idx是关键点在当前帧中的索引，但数组里存的MapPoint是闭环匹配到的关键帧中相应的MapPoint*/
                 continue;
 
             const int &kpLevel= pKF->mvKeysUn[idx].octave;
@@ -1160,7 +1160,9 @@ int ORBmatcher::Fuse(KeyFrame *pKF, const vector<MapPoint *> &vpMapPoints, const
 /**
   * @brief 投影MapPoints到KeyFrame中，并判断是否有重复的MapPoints
   *        Scw为世界坐标系到pKF机体坐标系的Sim3变换，用于将世界坐标系下的vpPoints变换到机体坐标系
+  * @param pKF 当前帧相连的关键帧
   * @param vpPoints  mvpLoopMapPoints
+  *
   */
 int ORBmatcher::Fuse(KeyFrame *pKF, cv::Mat Scw, const vector<MapPoint *> &vpPoints, float th, vector<MapPoint *> &vpReplacePoint)
 {
@@ -1173,7 +1175,7 @@ int ORBmatcher::Fuse(KeyFrame *pKF, cv::Mat Scw, const vector<MapPoint *> &vpPoi
     // Decompose Scw
     // 将Sim3转化为SE3并分解
     cv::Mat sRcw = Scw.rowRange(0,3).colRange(0,3);
-    const float scw = sqrt(sRcw.row(0).dot(sRcw.row(0)));// 计算得到尺度s
+    const float scw = sqrt(sRcw.row(0).dot(sRcw.row(0)));/** @attention 计算得到尺度s*/
     cv::Mat Rcw = sRcw/scw;// 除掉s
     cv::Mat tcw = Scw.rowRange(0,3).col(3)/scw;// 除掉s
     cv::Mat Ow = -Rcw.t()*tcw;
@@ -1192,7 +1194,8 @@ int ORBmatcher::Fuse(KeyFrame *pKF, cv::Mat Scw, const vector<MapPoint *> &vpPoi
         MapPoint* pMP = vpPoints[iMP];
 
         // Discard Bad MapPoints and already found
-        if(pMP->isBad() || spAlreadyFound.count(pMP)) //该MapPoint已经存在于闭环相连的关键帧之中,抛弃之
+        /** 该MapPoint已经存在于当前帧相连的关键帧之中,抛弃之，这是之前投影调用Fuse函数造成的*/
+        if(pMP->isBad() || spAlreadyFound.count(pMP))
             continue;
 
         // Get 3D Coords.
@@ -1337,7 +1340,7 @@ int ORBmatcher::SearchBySim3(KeyFrame *pKF1, KeyFrame *pKF2, vector<MapPoint*> &
             vbAlreadyMatched1[i]=true;// 该特征点已经判断过
             int idx2 = pMP->GetIndexInKeyFrame(pKF2);
             if(idx2>=0 && idx2<N2)
-                vbAlreadyMatched2[idx2]=true;// 该特征点在pKF1中有匹配
+                vbAlreadyMatched2[idx2]=true;// 该特征点在pKF2中有匹配
         }
     }
 

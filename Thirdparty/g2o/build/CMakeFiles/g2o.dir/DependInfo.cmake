@@ -1,14 +1,27 @@
 # The set of languages for which implicit dependencies are needed:
-SET(CMAKE_DEPENDS_LANGUAGES
+set(CMAKE_DEPENDS_LANGUAGES
   "C"
   "CXX"
   )
 # The set of files for implicit dependencies of each language:
-SET(CMAKE_DEPENDS_CHECK_C
+set(CMAKE_DEPENDS_CHECK_C
   "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/g2o/stuff/os_specific.c" "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/build/CMakeFiles/g2o.dir/g2o/stuff/os_specific.c.o"
   )
-SET(CMAKE_C_COMPILER_ID "GNU")
-SET(CMAKE_DEPENDS_CHECK_CXX
+set(CMAKE_C_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_C
+  "UNIX"
+  )
+
+# The include file search paths:
+set(CMAKE_C_TARGET_INCLUDE_PATH
+  "../core"
+  "../types"
+  "../stuff"
+  "/usr/include/eigen3"
+  )
+set(CMAKE_DEPENDS_CHECK_CXX
   "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/g2o/core/batch_stats.cpp" "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/build/CMakeFiles/g2o.dir/g2o/core/batch_stats.cpp.o"
   "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/g2o/core/cache.cpp" "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/build/CMakeFiles/g2o.dir/g2o/core/cache.cpp.o"
   "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/g2o/core/estimate_propagator.cpp" "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/build/CMakeFiles/g2o.dir/g2o/core/estimate_propagator.cpp.o"
@@ -38,24 +51,24 @@ SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.cpp" "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/build/CMakeFiles/g2o.dir/g2o/types/types_seven_dof_expmap.cpp.o"
   "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/g2o/types/types_six_dof_expmap.cpp" "/home/leather/ORB_SLAM2-master/Thirdparty/g2o/build/CMakeFiles/g2o.dir/g2o/types/types_six_dof_expmap.cpp.o"
   )
-SET(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Preprocessor definitions for this target.
-SET(CMAKE_TARGET_DEFINITIONS
+set(CMAKE_TARGET_DEFINITIONS_CXX
   "UNIX"
   )
 
-# Targets to which this target links.
-SET(CMAKE_TARGET_LINKED_INFO_FILES
-  )
-
 # The include file search paths:
-SET(CMAKE_C_TARGET_INCLUDE_PATH
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../core"
   "../types"
   "../stuff"
   "/usr/include/eigen3"
   )
-SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-SET(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

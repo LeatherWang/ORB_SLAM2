@@ -105,9 +105,12 @@ void LocalMapping::Run()
             // 将当前帧加入到闭环检测队列中
             mpLoopCloser->InsertKeyFrame(mpCurrentKeyFrame);
         }
-        else if(Stop())
+        else if(Stop()) //满足以下两个条件时，停止local Mapping: 1、loop closing请求停止local mapping；2、tracking已经完成关键帧的插入
         {
             // Safe area to stop
+            // 1、local Mapping是否停止?
+            // 2、软件是否关闭?
+            // 直到调用Release()函数后才跳出死循环!!!
             while(isStopped() && !CheckFinish())
             {
                 // usleep(3000);
@@ -691,6 +694,11 @@ void LocalMapping::RequestStop()
 bool LocalMapping::Stop()
 {
     unique_lock<mutex> lock(mMutexStop);
+    // 满足以下两个条件:
+    // 1、mbNotStop=false，tracking向local mapping插入关键帧成功，
+    //    mbNotStop=true，表示插入关键帧函数正在进行
+    //
+    // 2、mbStopRequested=true，loop closing的CorrectLoop函数或者GBA请求局部地图停止
     if(mbStopRequested && !mbNotStop)
     {
         mbStopped = true;
@@ -745,7 +753,7 @@ bool LocalMapping::SetNotStop(bool flag)
     unique_lock<mutex> lock(mMutexStop);
 
     if(flag && mbStopped)
-        return false;
+        return false; //local mapping已经停止了，且flag=true时，返回false
 
     mbNotStop = flag;
 

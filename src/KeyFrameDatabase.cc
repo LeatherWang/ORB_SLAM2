@@ -30,7 +30,7 @@ using namespace std;
 namespace ORB_SLAM2
 {
 
-KeyFrameDatabase::KeyFrameDatabase (const ORBVocabulary &voc):
+KeyFrameDatabase::KeyFrameDatabase (ORBVocabulary &voc):
     mpVoc(&voc)
 {
     mvInvertedFile.resize(voc.size()); // number of words
@@ -251,7 +251,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
     list<KeyFrame*> lKFsSharingWords;// 用于保存可能与F形成回环的候选帧（只要有相同的word，且不属于局部相连帧）
 
     // Search all keyframes that share a word with current frame
-    // 步骤1：找出和当前帧具有公共单词的所有关键帧
+    /*【步骤1】：找出和当前帧具有公共单词的所有关键帧*/
     {
         unique_lock<mutex> lock(mMutex);
 
@@ -278,7 +278,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
         return vector<KeyFrame*>();
 
     // Only compare against those keyframes that share enough words
-    // 步骤2：统计所有闭环候选帧中与当前帧F具有共同单词最多的单词数，并以此决定阈值
+    /*【步骤2】：统计所有闭环候选帧中与当前帧F具有共同单词最多的单词数，并以此决定阈值*/
     int maxCommonWords=0;
     for(list<KeyFrame*>::iterator lit=lKFsSharingWords.begin(), lend= lKFsSharingWords.end(); lit!=lend; lit++)
     {
@@ -293,7 +293,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
     int nscores=0;
 
     // Compute similarity score.
-    // 步骤3：遍历所有闭环候选帧，挑选出共有单词数大于阈值minCommonWords且单词匹配度大于minScore存入lScoreAndMatch
+    /*【步骤3】：遍历所有闭环候选帧，挑选出共有单词数大于阈值minCommonWords且单词匹配度大于minScore存入lScoreAndMatch*/
     for(list<KeyFrame*>::iterator lit=lKFsSharingWords.begin(), lend= lKFsSharingWords.end(); lit!=lend; lit++)
     {
         KeyFrame* pKFi = *lit;
@@ -315,8 +315,8 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
     float bestAccScore = 0;
 
     // Lets now accumulate score by covisibility
-    // 步骤4：计算候选帧组得分，得到最高组得分bestAccScore，并以此决定阈值minScoreToRetain
-    // 单单计算当前帧和某一关键帧的相似性是不够的，这里将与关键帧相连（权值最高，共视程度最高）的前十个关键帧归为一组，计算累计得分
+    /*【步骤4】：计算候选帧组得分，得到最高组得分bestAccScore，并以此决定阈值minScoreToRetain*/
+    // <单单计算当前帧和某一关键帧的相似性是不够的>，这里将与关键帧相连（权值最高，共视程度最高）的前十个关键帧归为一组，计算累计得分
     // 具体而言：lScoreAndMatch中每一个KeyFrame都把与自己共视程度较高的帧归为一组，每一组会计算组得分并记录该组分数最高的KeyFrame，记录于lAccScoreAndMatch
     for(list<pair<float,KeyFrame*> >::iterator it=lScoreAndMatch.begin(), itend=lScoreAndMatch.end(); it!=itend; it++)
     {
@@ -329,7 +329,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
         for(vector<KeyFrame*>::iterator vit=vpNeighs.begin(), vend=vpNeighs.end(); vit!=vend; vit++)
         {
             KeyFrame* pKF2 = *vit;
-            if(pKF2->mnRelocQuery!=F->mnId)
+            if(pKF2->mnRelocQuery!=F->mnId) /** @attention 只有pKF2也在闭环候选帧中，才能贡献分数*/
                 continue;
 
             accScore+=pKF2->mRelocScore;// 只有pKF2也在闭环候选帧中，才能贡献分数
@@ -346,7 +346,7 @@ vector<KeyFrame*> KeyFrameDatabase::DetectRelocalizationCandidates(Frame *F)
     }
 
     // Return all those keyframes with a score higher than 0.75*bestScore
-    // 步骤5：得到组得分大于阈值的，组内得分最高的关键帧
+    /*【步骤5】：得到组得分大于阈值的，组内得分最高的关键帧*/
     float minScoreToRetain = 0.75f*bestAccScore;
     set<KeyFrame*> spAlreadyAddedKF;
     vector<KeyFrame*> vpRelocCandidates;

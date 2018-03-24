@@ -78,11 +78,11 @@ int ORBmatcher::SearchByProjection(Frame &F, const vector<MapPoint*> &vpMapPoint
             continue;
 
         // 通过距离预测的金字塔层数，该层数相对于当前的帧
-        const int &nPredictedLevel = pMP->mnTrackScaleLevel;
+        const int &nPredictedLevel = pMP->mnTrackScaleLevel; //在isInFrustum()函数中赋值
 
         // The size of the window will depend on the viewing direction
         // 搜索窗口的大小取决于视角, 若当前视角和平均视角夹角接近0度时, r取一个较小的值
-        float r = RadiusByViewingCos(pMP->mTrackViewCos);
+        float r = RadiusByViewingCos(pMP->mTrackViewCos); //mTrackViewCos在isInFrustum()函数中赋值
 
         // 如果需要进行更粗糙的搜索，则增大范围
         if(bFactor)

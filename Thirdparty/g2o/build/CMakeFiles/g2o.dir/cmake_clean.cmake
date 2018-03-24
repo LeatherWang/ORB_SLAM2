@@ -1,4 +1,4 @@
-FILE(REMOVE_RECURSE
+file(REMOVE_RECURSE
   "CMakeFiles/g2o.dir/g2o/types/types_sba.cpp.o"
   "CMakeFiles/g2o.dir/g2o/types/types_six_dof_expmap.cpp.o"
   "CMakeFiles/g2o.dir/g2o/types/types_seven_dof_expmap.cpp.o"
@@ -33,6 +33,6 @@ FILE(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-FOREACH(lang C CXX)
-  INCLUDE(CMakeFiles/g2o.dir/cmake_clean_${lang}.cmake OPTIONAL)
-ENDFOREACH(lang)
+foreach(lang C CXX)
+  include(CMakeFiles/g2o.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

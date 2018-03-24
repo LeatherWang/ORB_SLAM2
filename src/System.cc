@@ -85,17 +85,18 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     mpKeyFrameDatabase = new KeyFrameDatabase(*mpVocabulary);
 
     //Create the Map
-    if (!bReuse) //false,同时定位与建图模式
+    if (!bReuse) /** false,同时定位与建图模式*/
     {
         mpMap = new Map();
     }
 
-        if (bReuse) //true，离线地图，定位模式
+    if (bReuse) /** true，离线地图，定位模式*/
 	{
+        //【1】加载地图
 		LoadMap("Slam_Map.bin");
         
         //mpKeyFrameDatabase->set_vocab(mpVocabulary);
-       
+        //【2】设置关键帧
         vector<ORB_SLAM2::KeyFrame*> vpKFs = mpMap->GetAllKeyFrames();
         for (vector<ORB_SLAM2::KeyFrame*>::iterator it = vpKFs.begin(); it != vpKFs.end(); ++it) {
             (*it)->SetKeyFrameDatabase(mpKeyFrameDatabase); //设置关键帧...
@@ -111,6 +112,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
         }
 
+        //【3】设置MapPoint
         vector<ORB_SLAM2::MapPoint*> vpMPs = mpMap->GetAllMapPoints();
         for (vector<ORB_SLAM2::MapPoint*>::iterator mit = vpMPs.begin(); mit != vpMPs.end(); ++mit) {
             (*mit)->SetMap(mpMap);
@@ -118,6 +120,7 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
         }
 
+        //【4】更新链接
         for (vector<ORB_SLAM2::KeyFrame*>::iterator it = vpKFs.begin(); it != vpKFs.end(); ++it) {
             (*it)->UpdateConnections();
         }

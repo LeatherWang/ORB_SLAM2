@@ -506,7 +506,8 @@ void LoopClosing::CorrectLoop()
 
     // Send a stop signal to Local Mapping
     // Avoid new keyframes are inserted while correcting the loop
-    /*【步骤0】：请求局部地图停止，防止局部地图线程中KeyFrameCulling函数删除关键帧*/
+    /*【步骤0】：1、请求局部地图停止，防止局部地图线程中KeyFrameCulling函数删除关键帧
+     *         2、防止在tracking线程中，新的关键帧被插入*/
     mpLocalMapper->RequestStop();
 
     // If a Global Bundle Adjustment is running, abort it

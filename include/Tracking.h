@@ -214,7 +214,7 @@ protected:
     //Color order (true RGB, false BGR, ignored if grayscale)
     bool mbRGB;
     list<MapPoint*> mlpTemporalPoints;
-	bool is_preloaded;
+    bool is_preloaded;
 };
 
 } //namespace ORB_SLAM
